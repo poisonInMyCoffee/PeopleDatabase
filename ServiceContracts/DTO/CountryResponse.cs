@@ -8,6 +8,20 @@ namespace ServiceContracts.DTO
     {
         public Guid CountryId { get; set; }
         public string? CountryName { get; set; }
+
+        public override bool Equals(object? obj)
+        {
+            //Compares current object to another object of country response type and returns true,if both are same otherwise returns false
+            if (obj == null) return false;
+            if(obj.GetType() != typeof(CountryResponse)) return false;
+
+            CountryResponse Country_To_Compare = (CountryResponse)obj;
+            return CountryId== Country_To_Compare.CountryId &&  CountryName==Country_To_Compare.CountryName;
+        }
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
     public static class CountryExtensions
     {
