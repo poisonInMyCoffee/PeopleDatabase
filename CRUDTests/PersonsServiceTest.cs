@@ -78,7 +78,6 @@ namespace CRUDTests
 
         #endregion
 
-
         #region GetPersonByPersonID
 
         //If we supply null as PersonID, it should return null as PersonResponse
@@ -115,7 +114,6 @@ namespace CRUDTests
         }
 
         #endregion
-
 
         #region GetAllPersons
 
@@ -158,9 +156,9 @@ namespace CRUDTests
                 person_response_list_from_add.Add(person_response);
             }
 
-            //print  person_response_list_from_add
-            _testoutputHelper.WriteLine("Expected:");
-            foreach(PersonResponse person_response_from_add in person_response_list_from_add)
+            //print person_response_list_from_add
+            _testOutputHelper.WriteLine("Expected:");
+            foreach (PersonResponse person_response_from_add in person_response_list_from_add)
                 {
                 _testoutputHelper.WriteLine(person_response_from_add.ToString());
             }
