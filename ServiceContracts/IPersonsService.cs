@@ -1,5 +1,6 @@
 ﻿using System;
 using ServiceContracts.DTO;
+using ServiceContracts.Enums;
 
 namespace ServiceContracts
 {
@@ -28,6 +29,42 @@ namespace ServiceContracts
         /// <param name="personID"></param>
         /// <returns></returns>
         PersonResponse GetPersonByPersonID(Guid? personID);
+
+        /// <summary>
+        /// Returns alll person object with given search field  `   
+        /// </summary>
+        /// <param name="SearchBy"></param>
+        /// <param name="searchString"></param>
+        /// <returns></returns>
+
+        List<PersonResponse> GetFilteredPerson(string SearchBy, string? searchString);
+
+        /// <summary>
+        /// 
+        ///Name of property based on which persons list should be sorted asc or desc
+        /// </summary>
+        /// <param name="allPersons"></param>
+        /// <param name="sortBy"></param>
+        /// <param name="sortOrder"></param>
+        /// <returns></returns>
+        public List<PersonResponse> GetSortedPersons(List<PersonResponse> allPersons, string sortBy
+            , sortOrderOptions sortOrder);
+
+        /// <summary>
+        /// Updates the specified person details based on the given person ID
+        /// </summary>
+        /// <param name="personUpdateRequest">Person details to update, including person id</param>
+        /// <returns>Returns the person response object after updation</returns>
+        PersonResponse UpdatePerson(PersonUpdateRequest? personUpdateRequest);
+
+        /// <summary>
+        /// Deletes person based on the given person id
+        /// </summary>
+        /// <param name="personID"></param>
+        /// <returns></returns>
+
+        bool DeletePerson(Guid? personID);
+
 
     }
 }
