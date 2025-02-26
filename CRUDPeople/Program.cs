@@ -1,7 +1,14 @@
+using ServiceContracts;
+using Services;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+
+//add services in IoC container
+builder.Services.AddSingleton<ICountriesService,CountriesService>();
+builder.Services.AddSingleton<IPersonsService,PersonsService>();
 
 if (builder.Environment.IsDevelopment())
 {
