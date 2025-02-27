@@ -30,6 +30,8 @@ namespace CRUDPeople.Controllers
                 { nameof(PersonResponse.Address),"Address" }
             };
             List<PersonResponse> persons= _personsService.GetFilteredPersons(searchBy, searchString);
+            ViewBag.CurrentsearchBy = searchBy;
+            ViewBag.currentsearchString = searchString;
             return View(persons);
         }
     }

@@ -9,7 +9,7 @@
 
     <div class="box flex">
         <div class="flex-1">
-            <select class="form-input" name="searchBy">
+            <select class="form-input" name="searchBy" >
                 @foreach (var field in ViewBag.SearchFields)
                 {
                     if (field.Key == ViewBag.CurrentSearchBy)
