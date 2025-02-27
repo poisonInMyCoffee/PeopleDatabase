@@ -97,7 +97,7 @@ namespace Services
             return person.ToPersonResponse();
         }
 
-        public List<PersonResponse> GetFilteredPerson(string searchBy, string? searchString)
+        public List<PersonResponse> GetFilteredPersons(string searchBy, string? searchString)
         {
             List<PersonResponse> allPersons = GetAllPersons();
             List<PersonResponse> matchingPersons = allPersons;
@@ -145,7 +145,8 @@ namespace Services
                     temp.Address.Contains(searchString, StringComparison.OrdinalIgnoreCase) : true)).ToList();
                     break;
 
-                default: matchingPersons = allPersons; break;
+                default: matchingPersons = allPersons;
+                    break;
             }
             return matchingPersons;
         }

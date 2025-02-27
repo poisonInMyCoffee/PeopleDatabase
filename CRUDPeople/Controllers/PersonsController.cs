@@ -18,10 +18,19 @@ namespace CRUDPeople.Controllers
 
         [Route("persons/Index")]
         [Route("/")]
-        public IActionResult Index()
+        public IActionResult Index(string searchBy, string? searchString )
         {
-            List<PersonResponse> persons= _personsService.GetAllPersons();
-            return View();
+            ViewBag.SearchFields = new Dictionary<string, string>()
+            {
+                { nameof(PersonResponse.PersonName),"Person Name" },
+                { nameof(PersonResponse.Email),"Email" },
+                { nameof(PersonResponse.DateOfBirth),"DateOfBirth" },
+                { nameof(PersonResponse.Gender),"Gender" },
+                { nameof(PersonResponse.Country),"Country" },
+                { nameof(PersonResponse.Address),"Address" }
+            };
+            List<PersonResponse> persons= _personsService.GetFilteredPersons(searchBy, searchString);
+            return View(persons);
         }
     }
 }

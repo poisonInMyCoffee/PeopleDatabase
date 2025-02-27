@@ -37,7 +37,7 @@ namespace ServiceContracts
         /// <param name="searchString"></param>
         /// <returns></returns>
 
-        List<PersonResponse> GetFilteredPerson(string SearchBy, string? searchString);
+        List<PersonResponse> GetFilteredPersons(string SearchBy, string? searchString);
 
         /// <summary>
         /// 

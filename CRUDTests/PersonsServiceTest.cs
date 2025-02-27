@@ -220,7 +220,7 @@ namespace CRUDTests
             }
 
             //Act
-            List<PersonResponse> persons_list_from_search = _personService.GetFilteredPerson(nameof(Person.PersonName), "");
+            List<PersonResponse> persons_list_from_search = _personService.GetFilteredPersons(nameof(Person.PersonName), "");
 
             //print persons_list_from_get
             _testOutputHelper.WriteLine("Actual:");
@@ -272,7 +272,7 @@ namespace CRUDTests
             }
 
             //Act
-            List<PersonResponse> persons_list_from_search = _personService.GetFilteredPerson(nameof(Person.PersonName), "ma");
+            List<PersonResponse> persons_list_from_search = _personService.GetFilteredPersons(nameof(Person.PersonName), "ma");
 
             //print persons_list_from_get
             _testOutputHelper.WriteLine("Actual:");
