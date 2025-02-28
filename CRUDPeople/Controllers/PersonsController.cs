@@ -22,6 +22,8 @@ namespace CRUDPeople.Controllers
         public IActionResult Index(string searchBy, string? searchString, string sortBy=nameof(PersonResponse.PersonName),
             sortOrderOptions sortOrder=sortOrderOptions.ASC)
         {
+
+            //filter
             ViewBag.SearchFields = new Dictionary<string, string>()
             {
                 { nameof(PersonResponse.PersonName),"Person Name" },
