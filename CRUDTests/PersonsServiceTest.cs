@@ -389,10 +389,11 @@ namespace CRUDTests
         public void UpdatePerson_PersonNameIsNull()
         {
             //Arrange
-            CountryAddRequest country_add_request = new CountryAddRequest() { CountryName = "New Jersey" };
+            CountryAddRequest country_add_request = new CountryAddRequest() { CountryName = "Alabama" };
             CountryResponse country_response_from_add = _countriesService.AddCountry(country_add_request);
 
-            PersonAddRequest person_add_request = new PersonAddRequest() { PersonName = "John", CountryID = country_response_from_add.CountryId };
+            PersonAddRequest person_add_request = new PersonAddRequest() { PersonName = "John", CountryID = country_response_from_add.CountryId, Email = "john@example.com", Address = "address...", Gender = GenderOptions.Male };
+
             PersonResponse person_response_from_add = _personService.AddPerson(person_add_request);
 
             PersonUpdateRequest person_update_request = person_response_from_add.ToPersonUpdateRequest();
