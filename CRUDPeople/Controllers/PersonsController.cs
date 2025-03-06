@@ -2,6 +2,7 @@
 using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
+using System.Reflection.Metadata.Ecma335;
 
 namespace CRUDPeople.Controllers
 {
@@ -48,13 +49,36 @@ namespace CRUDPeople.Controllers
             return View(sortedPersons);
         }
 
+
+        //Executes when the user clicks on "Create Person" hyperlink (while opening the create view)
         [Route("persons/create")]
         [HttpGet]
         public IActionResult Create()
         {
             List<CountryResponse> countries = _countriesService.GetAllCountries();
-            ViewBag.countries = countries;
+            ViewBag.Countries = countries;
+
             return View();
+        }
+
+        [HttpPost]
+        [Route("persons/create")]
+        public IActionResult Create(PersonAddRequest personAddRequest)
+        {
+            if (!ModelState.IsValid)
+            {
+                List<CountryResponse> countries = _countriesService.GetAllCountries();
+                ViewBag.Countries = countries;
+
+                ViewBag.Errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                return View();
+            }
+
+            //call the service method
+            PersonResponse personResponse = _personsService.AddPerson(personAddRequest);
+
+            //navigate to Index() action method (it makes another get request to "persons/index"
+            return RedirectToAction("Index", "Persons");
         }
     }
 }
