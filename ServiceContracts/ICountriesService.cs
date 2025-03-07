@@ -19,6 +19,6 @@ namespace ServiceContracts
         /// </summary>
         /// <param name="countryID"></param>
         /// <returns></returns>
-        CountryResponse? GetCountryByCountryId(Guid? countryID);
+        CountryResponse? GetCountryByCountryID(Guid? countryID);
     }   
 }

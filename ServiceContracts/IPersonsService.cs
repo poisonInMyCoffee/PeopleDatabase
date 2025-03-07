@@ -48,7 +48,7 @@ namespace ServiceContracts
         /// <param name="sortOrder"></param>
         /// <returns></returns>
         public List<PersonResponse> GetSortedPersons(List<PersonResponse> allPersons, string sortBy
-            , sortOrderOptions sortOrder);
+            , SortOrderOptions sortOrder);
 
         /// <summary>
         /// Updates the specified person details based on the given person ID
