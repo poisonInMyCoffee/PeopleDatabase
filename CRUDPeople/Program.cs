@@ -4,11 +4,10 @@ using Services;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
-
-
-//add services in IoC container
-builder.Services.AddSingleton<ICountriesService,CountriesService>();
+//add services into IoC container
+builder.Services.AddSingleton<ICountriesService, CountriesService>();
 builder.Services.AddSingleton<IPersonsService, PersonsService>();
+
 
 var app = builder.Build();
 

@@ -24,31 +24,30 @@ namespace ServiceContracts
         List<PersonResponse> GetAllPersons();
 
         /// <summary>
-        /// Returns persons object based on given person id
+        /// Returns the person object based on the given person id
         /// </summary>
-        /// <param name="personID"></param>
-        /// <returns></returns>
-        PersonResponse GetPersonByPersonID(Guid? personID);
+        /// <param name="personID">Person id to search</param>
+        /// <returns>Returns matching person object</returns>
+        PersonResponse? GetPersonByPersonID(Guid? personID);
 
         /// <summary>
-        /// Returns alll person object with given search field  `   
+        /// Returns all person objects that matches with the given search field and search string
         /// </summary>
-        /// <param name="SearchBy"></param>
-        /// <param name="searchString"></param>
-        /// <returns></returns>
+        /// <param name="searchBy">Search field to search</param>
+        /// <param name="searchString">Search string to search</param>
+        /// <returns>Returns all matching persons based on the given search field and search string</returns>
+        List<PersonResponse> GetFilteredPersons(string searchBy, string? searchString);
 
-        List<PersonResponse> GetFilteredPersons(string SearchBy, string? searchString);
 
         /// <summary>
-        /// 
-        ///Name of property based on which persons list should be sorted asc or desc
+        /// Returns sorted list of persons
         /// </summary>
-        /// <param name="allPersons"></param>
-        /// <param name="sortBy"></param>
-        /// <param name="sortOrder"></param>
-        /// <returns></returns>
-        public List<PersonResponse> GetSortedPersons(List<PersonResponse> allPersons, string sortBy
-            , SortOrderOptions sortOrder);
+        /// <param name="allPersons">Represents list of persons to sort</param>
+        /// <param name="sortBy">Name of the property (key), based on which the persons should be sorted</param>
+        /// <param name="sortOrder">ASC or DESC</param>
+        /// <returns>Returns sorted persons as PersonResponse list</returns>
+        List<PersonResponse> GetSortedPersons(List<PersonResponse> allPersons, string sortBy, SortOrderOptions sortOrder);
+
 
         /// <summary>
         /// Updates the specified person details based on the given person ID
@@ -57,14 +56,12 @@ namespace ServiceContracts
         /// <returns>Returns the person response object after updation</returns>
         PersonResponse UpdatePerson(PersonUpdateRequest? personUpdateRequest);
 
+
         /// <summary>
-        /// Deletes person based on the given person id
+        /// Deletes a person based on the given person id
         /// </summary>
-        /// <param name="personID"></param>
-        /// <returns></returns>
-
+        /// <param name="PersonID">PersonID to delete</param>
+        /// <returns>Returns true, if the deletion is successful; otherwise false</returns>
         bool DeletePerson(Guid? personID);
-
-
     }
 }
