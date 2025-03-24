@@ -9,6 +9,10 @@ namespace Entities
 {
     public class PersonsDbContext : DbContext
     {
+        public PersonsDbContext(DbContextOptions options): base(options) 
+        {
+            
+        }
 
         //DbSet represents 2 tables Country and person
         public DbSet<Country> Countries { get; set; }
