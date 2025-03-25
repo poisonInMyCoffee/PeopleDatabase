@@ -48,7 +48,8 @@ namespace Services
             person.PersonID = Guid.NewGuid();
 
             //add person object to persons list
-            _persons.Add(person);
+            _db.Persons.Add(person);
+            _db.SaveChanges();
 
             //convert the Person object into PersonResponse type
             return ConvertPersonToPersonResponse(person);
@@ -57,7 +58,8 @@ namespace Services
 
         public List<PersonResponse> GetAllPersons()
         {
-            return _persons.Select(temp => ConvertPersonToPersonResponse(temp)).ToList();
+            //Select * from persons
+            return _db.Persons.ToList().Select(temp => ConvertPersonToPersonResponse(temp)).ToList();
         }
 
 
@@ -66,7 +68,7 @@ namespace Services
             if (personID == null)
                 return null;
 
-            Person? person = _persons.FirstOrDefault(temp => temp.PersonID == personID);
+            Person? person = _db.Persons.FirstOrDefault(temp => temp.PersonID == personID);
             if (person == null)
                 return null;
 
@@ -181,7 +183,7 @@ namespace Services
             ValidationHelper.ModelValidation(personUpdateRequest);
 
             //get matching person object to update
-            Person? matchingPerson = _persons.FirstOrDefault(temp => temp.PersonID == personUpdateRequest.PersonID);
+            Person? matchingPerson = _db.Persons.FirstOrDefault(temp => temp.PersonID == personUpdateRequest.PersonID);
             if (matchingPerson == null)
             {
                 throw new ArgumentException("Given person id doesn't exist");
@@ -206,11 +208,12 @@ namespace Services
                 throw new ArgumentNullException(nameof(personID));
             }
 
-            Person? person = _persons.FirstOrDefault(temp => temp.PersonID == personID);
+            Person? person = _db.Persons.FirstOrDefault(temp => temp.PersonID == personID);
             if (person == null)
                 return false;
 
-            _persons.RemoveAll(temp => temp.PersonID == personID);
+            _db.Persons.Remove(_db.Persons.First(temp => temp.PersonID == personID));
+            _db.SaveChanges();
 
             return true;
         }
