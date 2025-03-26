@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 
 namespace Entities
 {
@@ -40,6 +41,10 @@ namespace Entities
             foreach (Person person in persons) {
                 modelBuilder.Entity<Person>().HasData(person);
             }
+        }
+        public List <Person> sp_GetAllPersons()
+        {
+            return Persons.FromSqlRaw("EXCECUTE [dbo].[GetAllPersons]").ToList();
         }
     }
 }

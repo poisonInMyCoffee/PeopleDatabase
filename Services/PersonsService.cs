@@ -59,7 +59,7 @@ namespace Services
         public List<PersonResponse> GetAllPersons()
         {
             //Select * from persons
-            return _db.Persons.ToList().Select(temp => ConvertPersonToPersonResponse(temp)).ToList();
+            return _db.sp_GetAllPersons().Select(temp => ConvertPersonToPersonResponse(temp)).ToList();
         }
 
 
