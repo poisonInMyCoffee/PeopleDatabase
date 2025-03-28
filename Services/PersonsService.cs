@@ -48,8 +48,9 @@ namespace Services
             person.PersonID = Guid.NewGuid();
 
             //add person object to persons list
-            _db.Persons.Add(person);
-            _db.SaveChanges();
+            //_db.Persons.Add(person);
+            //_db.SaveChanges();
+            _db.sp_InsertPerson(person); 
 
             //convert the Person object into PersonResponse type
             return ConvertPersonToPersonResponse(person);
