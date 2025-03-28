@@ -44,7 +44,7 @@ namespace Entities
         }
         public List <Person> sp_GetAllPersons()
         {
-            return Persons.FromSqlRaw("EXCECUTE [dbo].[GetAllPersons]").ToList();
+            return Persons.FromSqlRaw("EXECUTE [dbo].[GetAllPersons]").ToList();
         }
     }
 }
