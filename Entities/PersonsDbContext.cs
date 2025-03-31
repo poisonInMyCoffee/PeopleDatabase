@@ -55,7 +55,7 @@ namespace Entities
                 new SqlParameter("@PersonName",person.PersonName),
                 new SqlParameter("@Email",person.Email),
                 new SqlParameter("@DateOfBirth",person.DateOfBirth),
-                new SqlParameter("@Gender",person.Gende),
+                new SqlParameter("@Gender",person.Gender),
                 new SqlParameter("@CountryID",person.CountryID),
                 new SqlParameter("@Address",person.Address),
                 new SqlParameter("@ReceiveNewsLetters",person.ReceiveNewsLetters)

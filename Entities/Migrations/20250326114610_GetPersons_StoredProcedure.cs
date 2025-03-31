@@ -12,10 +12,10 @@ namespace Entities.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             string sp_GetAllPersons = @"
-CREATE PROCEDURE [dbo].[GetAllPersons]
-AS BEGIN 
-SELECT PersonID,PersonName,Email,DateOfbirth,Gender,CountryID,Address,ReceiveNewsletters from [dbo].[Persons]
-END
+            CREATE PROCEDURE [dbo].[GetAllPersons]
+            AS BEGIN 
+            SELECT PersonID,PersonName,Email,DateOfbirth,Gender,CountryID,Address,ReceiveNewsletters from [dbo].[Persons]
+            END
 ";
             migrationBuilder.Sql(sp_GetAllPersons);
         }
