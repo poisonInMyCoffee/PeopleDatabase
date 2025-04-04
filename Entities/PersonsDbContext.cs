@@ -42,11 +42,23 @@ namespace Entities
             foreach (Person person in persons) {
                 modelBuilder.Entity<Person>().HasData(person);
 
-                //FluentAPI
+                //FluentAPI[used to change the datatype or variable name in method]
                 modelBuilder.Entity<Person>().Property(temp => temp.TIN)
                     .HasColumnName("TaxIdentificationNumber")
                     .HasColumnType("varchar(8)")
                     .HasDefaultValue("ABC12345");
+
+                //Adding constraint using fluent API(Not applying unique value constraint coz we have used default value if no value is entered)
+
+                //modelBuilder.Entity<Person>().HasIndex(temp => temp.TIN).IsUnique();
+
+                modelBuilder.Entity<Person>().HasCheckConstraint("CHK_TIN", "len([TaxIdentificationNumber])=8");
+
+                //Table relations
+                //modelBuilder.Entity<Person>(entity =>
+                //{
+                //    entity.HasOne<Country>(c => c.Country).WithMany(p => p.Persons).HasForeignKey(p=>p.CountryID);
+                //});
             }
         }
         public List <Person> sp_GetAllPersons()
