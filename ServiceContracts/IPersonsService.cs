@@ -65,6 +65,16 @@ namespace ServiceContracts
         Task <bool> DeletePerson(Guid? personID);
 
         //Returns persons csv as output  
-        Task<MemoryStream> GetPersonsCSV();     
+        Task<MemoryStream> GetPersonsCSV();
+
+/// <summary>
+/// Returns Excel file as output
+/// </summary>
+/// <returns></returns>
+        Task<MemoryStream> GetPersonsExcel();
+
+        
+
     }
+
 }
