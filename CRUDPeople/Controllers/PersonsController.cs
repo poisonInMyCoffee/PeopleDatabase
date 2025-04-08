@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CsvHelper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Rotativa.AspNetCore;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
+using System.Globalization;
 
 namespace CRUDExample.Controllers
 {
@@ -149,6 +151,7 @@ namespace CRUDExample.Controllers
             await _personsService.DeletePerson(personUpdateRequest.PersonID);
             return RedirectToAction("Index");
         }
+        [Route("PersonsPdf")]
         public async Task<IActionResult> PersonsPdf()
         {
             List<PersonResponse> persons = await _personsService.GetAllPersons();
@@ -159,5 +162,12 @@ namespace CRUDExample.Controllers
                 PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
             };
         }
+        [Route("PersonsCSV")]
+       public async Task <IActionResult> PersonsCSV()
+        {
+           MemoryStream memorystream= await _personsService.GetPersonsCSV();
+            //(file to be converted,file type in which to be converted, name of the converted file
+            return File(memorystream, "application/octet-stream", "persons.csv");  
+        }
+        }
     }
-}

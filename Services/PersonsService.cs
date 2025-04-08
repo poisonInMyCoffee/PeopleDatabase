@@ -6,6 +6,8 @@ using System.ComponentModel.DataAnnotations;
 using Services.Helpers;
 using ServiceContracts.Enums;
 using Microsoft.EntityFrameworkCore;
+using CsvHelper;
+using System.Globalization;
 
 namespace Services
 {
@@ -17,16 +19,16 @@ namespace Services
         private readonly ICountriesService _countriesService;
 
         //constructor
-        public PersonsService(PersonsDbContext personsDbContext,ICountriesService countriesService)
+        public PersonsService(PersonsDbContext personsDbContext, ICountriesService countriesService)
         {
             _db = personsDbContext;
-            _countriesService = countriesService;          
+            _countriesService = countriesService;
         }
 
 
-       
 
-        public async Task <PersonResponse> AddPerson(PersonAddRequest? personAddRequest)
+
+        public async Task<PersonResponse> AddPerson(PersonAddRequest? personAddRequest)
         {
             //check if PersonAddRequest is not null
             if (personAddRequest == null)
@@ -46,7 +48,7 @@ namespace Services
             //add person object to persons list
             _db.Persons.Add(person);
             await _db.SaveChangesAsync();
-           // _db.sp_InsertPerson(person); 
+            // _db.sp_InsertPerson(person); 
 
             //convert the Person object into PersonResponse type
             return person.ToPersonResponse();
@@ -56,19 +58,19 @@ namespace Services
         public async Task<List<PersonResponse>> GetAllPersons()
         {
             //Select * from persons
-            var persons =await _db.Persons.Include("Country").ToListAsync();
+            var persons = await _db.Persons.Include("Country").ToListAsync();
 
-            return  persons.Select(temp => temp.ToPersonResponse()).ToList();
+            return persons.Select(temp => temp.ToPersonResponse()).ToList();
 
         }
 
 
-        public async Task <PersonResponse?> GetPersonByPersonID(Guid? personID)
+        public async Task<PersonResponse?> GetPersonByPersonID(Guid? personID)
         {
             if (personID == null)
                 return null;
 
-            Person? person =await _db.Persons.Include("Country").FirstOrDefaultAsync(temp => temp.PersonID == personID);
+            Person? person = await _db.Persons.Include("Country").FirstOrDefaultAsync(temp => temp.PersonID == personID);
             if (person == null)
                 return null;
 
@@ -77,7 +79,7 @@ namespace Services
 
         public async Task<List<PersonResponse>> GetFilteredPersons(string searchBy, string? searchString)
         {
-            List<PersonResponse> allPersons =await GetAllPersons();
+            List<PersonResponse> allPersons = await GetAllPersons();
             List<PersonResponse> matchingPersons = allPersons;
 
             if (string.IsNullOrEmpty(searchBy) || string.IsNullOrEmpty(searchString))
@@ -129,7 +131,7 @@ namespace Services
         }
 
 
-        public async Task <List<PersonResponse>> GetSortedPersons(List<PersonResponse> allPersons, string sortBy, SortOrderOptions sortOrder)
+        public async Task<List<PersonResponse>> GetSortedPersons(List<PersonResponse> allPersons, string sortBy, SortOrderOptions sortOrder)
         {
             if (string.IsNullOrEmpty(sortBy))
                 return allPersons;
@@ -203,14 +205,14 @@ namespace Services
             return matchingPerson.ToPersonResponse();
         }
 
-        public async Task <bool> DeletePerson(Guid? personID)
+        public async Task<bool> DeletePerson(Guid? personID)
         {
             if (personID == null)
             {
                 throw new ArgumentNullException(nameof(personID));
             }
 
-            Person? person =await _db.Persons.FirstOrDefaultAsync(temp => temp.PersonID == personID);
+            Person? person = await _db.Persons.FirstOrDefaultAsync(temp => temp.PersonID == personID);
             if (person == null)
                 return false;
 
@@ -218,6 +220,22 @@ namespace Services
             await _db.SaveChangesAsync();
 
             return true;
+        }
+        public async Task<MemoryStream> GetPersonsCSV()
+        {
+            MemoryStream memoryStream = new MemoryStream();
+            StreamWriter streamWriter = new StreamWriter(memoryStream);
+            CsvWriter csvWriter = new CsvWriter(streamWriter, CultureInfo.InvariantCulture, leaveOpen: true);
+
+            csvWriter.WriteHeader<PersonResponse>();
+            //PersonId,PersonName...etc
+            csvWriter.NextRecord();
+
+            List<PersonResponse> persons = _db.Persons.Include("Country"). Select(temp => temp.ToPersonResponse()).ToList();
+
+            await csvWriter.WriteRecordsAsync(persons); //Write data inside the table
+            memoryStream.Position= 0;
+            return memoryStream;
         }
     }
 }
