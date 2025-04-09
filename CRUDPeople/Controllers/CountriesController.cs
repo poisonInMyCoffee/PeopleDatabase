@@ -2,10 +2,10 @@
 
 namespace CRUDPeople.Controllers
 {
-    [Route("[Controller]")]
+    [Route("[controller]")]
     public class CountriesController : Controller
     {
-        Route[("UploadFromExcel")]
+        [Route("UploadFromExcel")]
         public IActionResult UploadFromExcel()
         {
             return View();
