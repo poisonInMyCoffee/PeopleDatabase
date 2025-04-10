@@ -1,11 +1,10 @@
-﻿using CsvHelper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Rotativa.AspNetCore;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
-using System.Globalization;
+using System.IO;
 
 namespace CRUDExample.Controllers
 {
@@ -38,6 +37,8 @@ namespace CRUDExample.Controllers
         { nameof(PersonResponse.CountryID), "Country" },
         { nameof(PersonResponse.Address), "Address" }
       };
+
+
             List<PersonResponse> persons = await _personsService.GetFilteredPersons(searchBy, searchString);
             ViewBag.CurrentSearchBy = searchBy;
             ViewBag.CurrentSearchString = searchString;
@@ -67,6 +68,7 @@ namespace CRUDExample.Controllers
             return View();
         }
 
+
         [HttpPost]
         //Url: persons/create
         [Route("[action]")]
@@ -79,7 +81,7 @@ namespace CRUDExample.Controllers
                 new SelectListItem() { Text = temp.CountryName, Value = temp.CountryID.ToString() });
 
                 ViewBag.Errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-                return View();
+                return View(personAddRequest);
             }
 
             //call the service method
@@ -88,8 +90,9 @@ namespace CRUDExample.Controllers
             //navigate to Index() action method (it makes another get request to "persons/index"
             return RedirectToAction("Index", "Persons");
         }
+
         [HttpGet]
-        [Route("[action]/{personID}")]
+        [Route("[action]/{personID}")] //Eg: /persons/edit/1
         public async Task<IActionResult> Edit(Guid personID)
         {
             PersonResponse? personResponse = await _personsService.GetPersonByPersonID(personID);
@@ -97,23 +100,28 @@ namespace CRUDExample.Controllers
             {
                 return RedirectToAction("Index");
             }
+
             PersonUpdateRequest personUpdateRequest = personResponse.ToPersonUpdateRequest();
 
             List<CountryResponse> countries = await _countriesService.GetAllCountries();
             ViewBag.Countries = countries.Select(temp =>
-              new SelectListItem() { Text = temp.CountryName, Value = temp.CountryID.ToString() }
-            );
+            new SelectListItem() { Text = temp.CountryName, Value = temp.CountryID.ToString() });
+
             return View(personUpdateRequest);
         }
+
+
         [HttpPost]
         [Route("[action]/{personID}")]
         public async Task<IActionResult> Edit(PersonUpdateRequest personUpdateRequest)
         {
             PersonResponse? personResponse = await _personsService.GetPersonByPersonID(personUpdateRequest.PersonID);
+
             if (personResponse == null)
             {
                 return RedirectToAction("Index");
             }
+
             if (ModelState.IsValid)
             {
                 PersonResponse updatedPerson = await _personsService.UpdatePerson(personUpdateRequest);
@@ -123,52 +131,60 @@ namespace CRUDExample.Controllers
             {
                 List<CountryResponse> countries = await _countriesService.GetAllCountries();
                 ViewBag.Countries = countries.Select(temp =>
-                  new SelectListItem() { Text = temp.CountryName, Value = temp.CountryID.ToString() }
-                );
+                new SelectListItem() { Text = temp.CountryName, Value = temp.CountryID.ToString() });
+
                 ViewBag.Errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-                return View();
+                return View(personResponse.ToPersonUpdateRequest());
             }
         }
+
+
         [HttpGet]
         [Route("[action]/{personID}")]
         public async Task<IActionResult> Delete(Guid? personID)
         {
             PersonResponse? personResponse = await _personsService.GetPersonByPersonID(personID);
             if (personResponse == null)
-            {
                 return RedirectToAction("Index");
-            }
-            return View();
+
+            return View(personResponse);
         }
+
         [HttpPost]
         [Route("[action]/{personID}")]
-        public async Task<IActionResult> Delete(PersonUpdateRequest personUpdateRequest)
+        public async Task<IActionResult> Delete(PersonUpdateRequest personUpdateResult)
         {
-            PersonResponse? personResponse = await _personsService.GetPersonByPersonID(personUpdateRequest.PersonID);
+            PersonResponse? personResponse = await _personsService.GetPersonByPersonID(personUpdateResult.PersonID);
             if (personResponse == null)
                 return RedirectToAction("Index");
 
-            await _personsService.DeletePerson(personUpdateRequest.PersonID);
+            await _personsService.DeletePerson(personUpdateResult.PersonID);
             return RedirectToAction("Index");
         }
-        [Route("PersonsPdf")]
-        public async Task<IActionResult> PersonsPdf()
+
+
+        [Route("PersonsPDF")]
+        public async Task<IActionResult> PersonsPDF()
         {
+            //Get list of persons
             List<PersonResponse> persons = await _personsService.GetAllPersons();
 
-            return new ViewAsPdf("PersonsPdf", persons, ViewData)
+            //Return view as pdf
+            return new ViewAsPdf("PersonsPDF", persons, ViewData)
             {
                 PageMargins = new Rotativa.AspNetCore.Options.Margins() { Top = 20, Right = 20, Bottom = 20, Left = 20 },
-                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape
             };
         }
+
+
         [Route("PersonsCSV")]
-       public async Task <IActionResult> PersonsCSV()
+        public async Task<IActionResult> PersonsCSV()
         {
-           MemoryStream memorystream= await _personsService.GetPersonsCSV();
-            //(file to be converted,file type in which to be converted, name of the converted file
-            return File(memorystream, "application/octet-stream", "persons.csv");  
+            MemoryStream memoryStream = await _personsService.GetPersonsCSV();
+            return File(memoryStream, "application/octet-stream", "persons.csv");
         }
+
 
         [Route("PersonsExcel")]
         public async Task<IActionResult> PersonsExcel()
@@ -177,4 +193,4 @@ namespace CRUDExample.Controllers
             return File(memoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "persons.xlsx");
         }
     }
-    }
+}

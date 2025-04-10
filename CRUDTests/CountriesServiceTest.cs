@@ -6,6 +6,9 @@ using ServiceContracts;
 using Services;
 using Xunit;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
+using EntityFrameworkCoreMock;
+using Moq;
 
 namespace CRUDTests
 {
@@ -16,9 +19,16 @@ namespace CRUDTests
         //constructor
         public CountriesServiceTest()
         {
-            _countriesService = new CountriesService(new PersonsDbContext(new DbContextOptionsBuilder<PersonsDbContext>().Options));
+            var countriesInitialData = new List<Country>() { };//instead of using original db, we using empty list as data source & add seed data
 
-          
+            DbContextMock<ApplicationDbContext> dbContextMock = new DbContextMock<ApplicationDbContext>(
+              new DbContextOptionsBuilder<ApplicationDbContext>().Options //create a mock object for db context 
+             );
+
+            ApplicationDbContext dbContext = dbContextMock.Object;  //gives a mock of application db set 
+            dbContextMock.CreateDbSetMock(temp => temp.Countries, countriesInitialData);
+
+            _countriesService = new CountriesService(dbContext);
         }
 
         #region AddCountry
@@ -30,7 +40,7 @@ namespace CRUDTests
             CountryAddRequest? request = null;
 
             //Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(async() =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             {
                 //Act
                 await _countriesService.AddCountry(request);
@@ -62,7 +72,7 @@ namespace CRUDTests
             CountryAddRequest? request2 = new CountryAddRequest() { CountryName = "USA" };
 
             //Assert
-            await Assert.ThrowsAsync<ArgumentException>(async() =>
+            await Assert.ThrowsAsync<ArgumentException>(async () =>
             {
                 //Act
                 await _countriesService.AddCountry(request1);
@@ -79,8 +89,8 @@ namespace CRUDTests
             CountryAddRequest? request = new CountryAddRequest() { CountryName = "Japan" };
 
             //Act
-            CountryResponse response =await  _countriesService.AddCountry(request);
-            List<CountryResponse> countries_from_GetAllCountries =await _countriesService.GetAllCountries();
+            CountryResponse response = await _countriesService.AddCountry(request);
+            List<CountryResponse> countries_from_GetAllCountries = await _countriesService.GetAllCountries();
 
             //Assert
             Assert.True(response.CountryID != Guid.Empty);
@@ -97,11 +107,12 @@ namespace CRUDTests
         public async Task GetAllCountries_EmptyList()
         {
             //Act
-            List<CountryResponse> actual_country_response_list =await _countriesService.GetAllCountries();
+            List<CountryResponse> actual_country_response_list = await _countriesService.GetAllCountries();
 
             //Assert
-           Assert.Empty(actual_country_response_list);
+            Assert.Empty(actual_country_response_list);
         }
+
 
         [Fact]
         public async Task GetAllCountries_AddFewCountries()
@@ -119,8 +130,8 @@ namespace CRUDTests
             {
                 countries_list_from_add_country.Add(await _countriesService.AddCountry(country_request));
             }
-             
-            List<CountryResponse> actualCountryResponseList =await _countriesService.GetAllCountries();
+
+            List<CountryResponse> actualCountryResponseList = await _countriesService.GetAllCountries();
 
             //read each element from countries_list_from_add_country
             foreach (CountryResponse expected_country in countries_list_from_add_country)
