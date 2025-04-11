@@ -22,20 +22,22 @@ namespace CRUDPeople.Controllers
 
         [HttpPost]
         [Route("UploadFromExcel")]
-        public async Task <IActionResult> UploadFromExcel(IFormFile excelFile)
+        public async Task<IActionResult> UploadFromExcel(IFormFile excelFile)
         {
             if (excelFile == null || excelFile.Length == 0)
             {
                 ViewBag.ErrorMessage = "Please select an xlsx file";
                 return View();
             }
+
             if (!Path.GetExtension(excelFile.FileName).Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
             {
-                ViewBag.ErrorMessage = "Unsupported file";
+                ViewBag.ErrorMessage = "Unsupported file. 'xlsx' file is expected";
                 return View();
-
             }
-            int countriesCountInserted= await _countriesService.UploadCountriesFromExcelFiles(excelFile);
+
+            int countriesCountInserted = await _countriesService.UploadCountriesFromExcelFile(excelFile);
+
             ViewBag.Message = $"{countriesCountInserted} Countries Uploaded";
             return View();
         }
