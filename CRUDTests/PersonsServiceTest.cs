@@ -15,6 +15,8 @@ using AutoFixture;
 using AutoFixture.Kernel;
 using FluentAssertions;
 using static System.Collections.Specialized.BitVector32;
+using RepositoryContracts;
+using Moq;
 
 namespace CRUDTests
 {
@@ -23,13 +25,18 @@ namespace CRUDTests
         //private fields
         private readonly IPersonsService _personService;
         private readonly ICountriesService _countriesService;
+        private readonly IPersonsRepository personsRepository;
+        private readonly Mock<IPersonsRepository> _personsRepositoryMock;
         private readonly ITestOutputHelper _testOutputHelper;
         private readonly IFixture _fixture;
 
         //constructor
-        public PersonsServiceTest(ITestOutputHelper testOutputHelper)
+        public PersonsServiceTest(ITestOutputHelper testOutputHelper)  //It is the class which lets us create dummy object
         {
-            _fixture = new Fixture(); //It is the class which lets us create dummy object
+            _fixture = new Fixture(); 
+            _personsRepositoryMock= new Mock<IPersonsRepository>(); //Using this method we can mock any method of IPersonsRepository 
+
+
             var countriesInitialData = new List<Country>() { };
             var personsInitialData = new List<Person>() { };
 
@@ -103,6 +110,10 @@ namespace CRUDTests
             PersonAddRequest? personAddRequest = _fixture.Build<PersonAddRequest>()
                 .With(temp=>temp.Email, "random@gmail.com"). //Lets us override the value
                 Create();
+
+            _personsRepositoryMock
+
+            //Await
             PersonResponse person_response_from_add = await _personService.AddPerson(personAddRequest);
 
             List<PersonResponse> persons_list = await _personService.GetAllPersons();

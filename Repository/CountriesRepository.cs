@@ -27,7 +27,8 @@ namespace Repositories
         }
 
         public async Task<Country?> GetCountryByCountryID(Guid countryID)
-        { //need tp keep check here,it's async
+        { //need tp keep check here,it's async(first or default)
+
             return await _db.Countries.FirstOrDefaultAsync(temp => temp.CountryID == countryID);
         }
 

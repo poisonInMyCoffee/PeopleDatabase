@@ -20,7 +20,7 @@ namespace Services
         private readonly IPersonsRepository _personsRepository;
 
         //constructor
-        public PersonsService(IPersonsRepository personsRepository, ICountriesService countriesService)
+        public PersonsService(IPersonsRepository personsRepository)
         {
             _personsRepository = personsRepository;
         }
