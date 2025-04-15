@@ -36,3 +36,5 @@ app.UseRouting();
 app.MapControllers();
 
 app.Run();
+
+public partial class program { } //make the auto-generated Program accesible programmatically
