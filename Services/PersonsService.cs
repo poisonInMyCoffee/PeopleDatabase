@@ -11,6 +11,7 @@ using System.IO;
 using CsvHelper.Configuration;
 using OfficeOpenXml;
 using RepositoryContracts;
+using Microsoft.Extensions.Logging;
 
 namespace Services
 {
@@ -19,11 +20,13 @@ namespace Services
         //private field
         //private field
         private readonly IPersonsRepository _personsRepository;
+        private readonly ILogger<PersonsService> _logger;
 
         //constructor
-        public PersonsService(IPersonsRepository personsRepository)
+        public PersonsService(IPersonsRepository personsRepository, ILogger<PersonsService> logger)
         {
             _personsRepository = personsRepository;
+            _logger = logger;
         }
 
 
@@ -56,6 +59,8 @@ namespace Services
 
         public async Task<List<PersonResponse>> GetAllPersons()
         {
+            _logger.LogInformation("GetAllPersons of personsService");
+
             //SELECT * from Persons
             var persons = await _personsRepository.GetAllPersons();
 
@@ -84,6 +89,8 @@ namespace Services
 
         public async Task<List<PersonResponse>> GetFilteredPersons(string searchBy, string? searchString)
         {
+            _logger.LogInformation("GetFilteredPerson of PersonService");
+
             List<Person> persons = searchBy switch
 
 
@@ -122,6 +129,8 @@ namespace Services
 
         public async Task<List<PersonResponse>> GetSortedPersons(List<PersonResponse> allPersons, string sortBy, SortOrderOptions sortOrder)
         {
+            _logger.LogInformation("GetSortedPerson of PersonService");
+
             if (string.IsNullOrEmpty(sortBy))
                 return allPersons;
 

@@ -7,6 +7,16 @@ using Repositories;
 using Repository;
 
 var builder = WebApplication.CreateBuilder(args);
+
+//Logging
+builder.Host.ConfigureLogging(loggingProvider =>
+{
+    loggingProvider.ClearProviders();
+    loggingProvider.AddConsole();
+    loggingProvider.AddDebug();
+    loggingProvider.AddEventLog();
+});
+
 builder.Services.AddControllersWithViews();
 
 //add services into IoC container
@@ -28,6 +38,12 @@ if (builder.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 }
+
+//app.Logger.LogDebug("debug-message");
+//app.Logger.LogInformation("information-message");
+//app.Logger.LogWarning("Warning-message");
+//app.Logger.LogError("error-message");
+//app.Logger.LogCritical("critical-message");
 
 if (builder.Environment.IsEnvironment("Test") == false)
 {
