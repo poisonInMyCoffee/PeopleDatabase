@@ -25,7 +25,9 @@ namespace CRUDPeople.Filters.ActionFilters
             await next();
 
             _logger.LogInformation("{FilterName}.{MethodName} method- after", nameof(ResponseHeaderActionFilter), nameof(OnActionExecutionAsync));
+            
             context.HttpContext.Response.Headers[_key] = _value;
+            
 
         }
     }
