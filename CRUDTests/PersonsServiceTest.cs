@@ -40,7 +40,7 @@ namespace CRUDTests
             _personRepositoryMock = new Mock<IPersonsRepository>();
             _personsRepository = _personRepositoryMock.Object;
 
-            var diagnosticContextMock = new Mock<IDiagnosticContext>;
+            var diagnosticContextMock = new Mock<IDiagnosticContext>();
             var loggerMock = new Mock<ILogger<PersonsService>>();
 
             _personService = new PersonsService(_personsRepository,loggerMock.Object,diagnosticContextMock.Object);
