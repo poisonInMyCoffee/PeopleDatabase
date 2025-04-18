@@ -13,6 +13,7 @@ using OfficeOpenXml;
 using RepositoryContracts;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using SerilogTimings;
 
 namespace Services
 {
@@ -30,7 +31,7 @@ namespace Services
         {
             _personsRepository = personsRepository;
             _logger = logger;
-            _diagnosticContext= diagnosticContext;
+            _diagnosticContext = diagnosticContext;
         }
 
 
@@ -82,7 +83,7 @@ namespace Services
                 return null;
 
             Person? person = await _personsRepository.GetPersonByPersonID(personID.Value);
-             
+
 
             if (person == null)
                 return null;
@@ -93,40 +94,41 @@ namespace Services
 
         public async Task<List<PersonResponse>> GetFilteredPersons(string searchBy, string? searchString)
         {
+            List<Person> persons = null;
             _logger.LogInformation("GetFilteredPerson of PersonService");
-
-            List<Person> persons = searchBy switch
-
-
-            {
-                nameof(PersonResponse.PersonName) =>
+            using (Operation.Time("Time for filtered person from database")) //Start of serilog timing
+            { 
+                 persons = searchBy switch
+                {     
+                nameof (PersonResponse.PersonName) =>
                   await _personsRepository.GetFilteredPersons(temp =>
                    temp.PersonName.Contains(searchString)),
 
 
-                nameof(PersonResponse.Email) =>
+                nameof (PersonResponse.Email) =>
                    await _personsRepository.GetFilteredPersons(temp =>
                     temp.Email.Contains(searchString)),
 
 
-                nameof(PersonResponse.DateOfBirth) =>
+                nameof (PersonResponse.DateOfBirth) =>
                        await _personsRepository.GetFilteredPersons(temp =>
                          temp.DateOfBirth.Value.ToString("dd MM YYYY").Contains(searchString)),
 
-                nameof(PersonResponse.Gender) =>
+                nameof (PersonResponse.Gender) =>
                    await _personsRepository.GetFilteredPersons(temp =>
                     temp.Gender.Contains(searchString)),
 
-                nameof(PersonResponse.CountryID) =>
+                nameof (PersonResponse.CountryID) =>
                     await _personsRepository.GetFilteredPersons(temp =>
                      temp.Country.CountryName.Contains(searchString)),
 
-                nameof(PersonResponse.Address) =>
+                nameof (PersonResponse.Address) =>
                     await _personsRepository.GetFilteredPersons(temp =>
                      temp.Address.Contains(searchString)),
 
                 _ => await _personsRepository.GetAllPersons()
             };
+    }              //End of using of serilog timings
             _diagnosticContext.Set("Persons", persons);
             return persons.Select(temp => temp.ToPersonResponse()).ToList();
         }
