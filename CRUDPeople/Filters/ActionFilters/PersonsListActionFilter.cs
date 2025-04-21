@@ -33,10 +33,12 @@ namespace CRUDPeople.Filters.ActionFilters
                 {
                     personsController.ViewData["searchBy"] = Convert.ToString(parameters["searchString"]);
                 }
+
                 if (parameters.ContainsKey("sortBy"))
                 {
                     personsController.ViewData["sortBy"] = Convert.ToString(parameters["CurrentSortBy"]);
                 }
+
                 if (parameters.ContainsKey("sortOrder"))
                 {
                     personsController.ViewData["sortOrder"] = Convert.ToString(parameters["CurrentSortOrder"]);
