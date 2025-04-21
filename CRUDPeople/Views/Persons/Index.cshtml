@@ -8,7 +8,7 @@
 
  <a asp-controller="Persons" asp-action="Create">Create Person</a>
 
- <a asp-controller="Persons" asp-action="PersonsPdf" class="ml">Download as Pdf</a>
+ <a asp-controller="Persons" asp-action="PersonsPDF" class="ml">Download as PDF</a>
 
  <a asp-controller="Persons" asp-action="PersonsCSV" class="ml">Download as CSV</a>
 
@@ -44,7 +44,7 @@
  </div>
 
 
- <table class="table w-100 mt">
+ <table class="table w-100 mt persons">
   <thead>
    <tr>
     @await Html.PartialAsync("_GridColumnHeader", new ViewDataDictionary(ViewData) {
@@ -105,9 +105,11 @@
      <td style="width:20%">@person.ReceiveNewsLetters</td>
      <td style="width:20%">
          <a asp-controller="Persons" asp-action="Edit" asp-route-personID="@person.PersonID">Edit</a>
-         @*person/edit/1*@ 
+         @* /Persons/Edit/1 *@
+
          <a asp-controller="Persons" asp-action="Delete" asp-route-personID="@person.PersonID">Delete</a>
-         @*person/edit/1*@
+         @* /Persons/Delete/1 *@
+     </td>
     </tr>
    }
    <tr></tr>
