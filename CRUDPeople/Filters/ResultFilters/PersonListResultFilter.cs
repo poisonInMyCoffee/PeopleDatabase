@@ -17,13 +17,15 @@ namespace CRUDPeople.Filters.ResultFilters
             //TO Do: Before Logic
             _logger.LogInformation("{FilterName}.{MethodName} - before", nameof(PersonListResultFilter), nameof(OnResultExecutionAsync));
 
+            context.HttpContext.Response.Headers["Last-Modified"] = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+
+
             await next();
 
             //To Do : After Logic
 
             _logger.LogInformation("{FilterName}.{MethodName} - after", nameof(PersonListResultFilter), nameof(OnResultExecutionAsync));
 
-            context.HttpContext.Response.Headers["Last-Modified"] = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
         }
     }
 }
