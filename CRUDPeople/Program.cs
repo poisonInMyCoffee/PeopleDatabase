@@ -6,6 +6,7 @@ using RepositoryContracts;
 using Repositories;
 using Repository;
 using Serilog;
+using CRUDPeople;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +26,8 @@ builder.Host.UseSerilog((HostBuilderContext context, IServiceProvider services, 
     loggerConfiguration.ReadFrom.Configuration(context.Configuration)
     .ReadFrom.Services(services);
 });
+
+builder.Services.ConfigureServices();
 
 builder.Services.AddControllersWithViews();
 
