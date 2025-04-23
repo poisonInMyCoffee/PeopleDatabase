@@ -14,6 +14,7 @@ using RepositoryContracts;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using SerilogTimings;
+using Exceptions;
 
 namespace Services
 {
@@ -194,7 +195,7 @@ namespace Services
             Person? matchingPerson = await _personsRepository.GetPersonByPersonID(personUpdateRequest.PersonID);
             if (matchingPerson == null)
             {
-                throw new ArgumentException("Given person id doesn't exist");
+                throw new InvalidPersonIdException("Given person id doesn't exist"); //This is a custom exceptionhandler
             }
 
             //update all details
