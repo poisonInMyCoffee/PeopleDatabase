@@ -34,11 +34,14 @@ namespace CRUDExample.Controllers
   //constructor
   public PersonsController(IPersonsGetterService personsGetterService, IPersonsAdderService personsAdderService,
       ICountriesService countriesService, ILogger<PersonsController> logger, IPersonsDeleterService personsDeleterService,
-      IPersonsUpdaterService _personsUpdaterService, IPersonsSorterService _personsSorterService)
+      IPersonsUpdaterService personsUpdaterService, IPersonsSorterService personsSorterService)
   {
    _personsGetterService = personsGetterService;
             _personsAdderService = personsAdderService;
             _personsDeleterService = personsDeleterService;
+            _personsUpdaterService = personsUpdaterService;
+            _personsGetterService= personsGetterService;
+            _personsSorterService = personsSorterService;
             
    _countriesService = countriesService;
    _logger = logger;
@@ -66,7 +69,7 @@ namespace CRUDExample.Controllers
    List<PersonResponse> persons = await _personsGetterService.GetFilteredPersons(searchBy, searchString);
 
    //Sort
-   List<PersonResponse> sortedPersons = await _personsGetterService.GetSortedPersons(persons, sortBy, sortOrder);
+   List<PersonResponse> sortedPersons = await _personsSorterService.GetSortedPersons(persons, sortBy, sortOrder);
 
    return View(sortedPersons); //Views/Persons/Index.cshtml
   }
@@ -98,7 +101,7 @@ namespace CRUDExample.Controllers
   public async Task<IActionResult> Create(PersonAddRequest personRequest)
   {
    //call the service method
-   PersonResponse personResponse = await _personsGetterService.AddPerson(personRequest);
+   PersonResponse personResponse = await _personsAdderService.AddPerson(personRequest);
 
    //navigate to Index() action method (it makes another get request to "persons/index"
    return RedirectToAction("Index", "Persons");
@@ -139,7 +142,8 @@ namespace CRUDExample.Controllers
     return RedirectToAction("Index");
    }
 
-   PersonResponse updatedPerson = await _personsGetterService.UpdatePerson(personRequest);
+   //personRequest.PersonID=Guid.NewGuid();
+   PersonResponse updatedPerson = await _personsUpdaterService.UpdatePerson(personRequest);
    return RedirectToAction("Index");
   }
 
@@ -163,7 +167,7 @@ namespace CRUDExample.Controllers
    if (personResponse == null)
     return RedirectToAction("Index");
 
-   await _personsGetterService.DeletePerson(personUpdateResult.PersonID);
+   await _personsDeleterService.DeletePerson(personUpdateResult.PersonID);
    return RedirectToAction("Index");
   }
 
