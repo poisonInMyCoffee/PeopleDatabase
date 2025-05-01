@@ -35,10 +35,6 @@ namespace Services
             _diagnosticContext = diagnosticContext;
         }
 
-
-
-        
-
         public async Task<List<PersonResponse>> GetAllPersons()
         {
             _logger.LogInformation("GetAllPersons of personsService");

@@ -4,7 +4,7 @@ using System.Net.Mime;
 
 namespace CRUDPeople.Filters.AuthorizationFilter
 {
-    public class TokenAutherizationFilter : IAuthorizationFilter
+    public class TokenAuthorizationFilter : IAuthorizationFilter
     {
         public void OnAuthorization(AuthorizationFilterContext context)
         {

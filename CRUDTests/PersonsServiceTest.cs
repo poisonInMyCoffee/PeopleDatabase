@@ -8,17 +8,14 @@ using Services;
 using ServiceContracts.Enums;
 using Xunit.Abstractions;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
-using EntityFrameworkCoreMock;
 using AutoFixture;
 using FluentAssertions;
 using RepositoryContracts;
 using Moq;
 using System.Linq.Expressions;
-using Serilog.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace CRUDTests
 {
@@ -28,8 +25,8 @@ namespace CRUDTests
         private readonly IPersonsGetterService _personsGetterService;
         private readonly IPersonsAdderService _personsAdderService;
         private readonly IPersonsUpdaterService _personsUpdaterService;
-        private readonly IPersonsSorterService _personsSorterService;
         private readonly IPersonsDeleterService _personsDeleterService;
+        private readonly IPersonsSorterService _personsSorterService;
 
         private readonly Mock<IPersonsRepository> _personRepositoryMock;
         private readonly IPersonsRepository _personsRepository;
@@ -47,10 +44,14 @@ namespace CRUDTests
             var diagnosticContextMock = new Mock<IDiagnosticContext>();
             var loggerMock = new Mock<ILogger<PersonsGetterService>>();
 
-            _personsGetterService = new PersonsGetterService(_personsRepository,loggerMock.Object,diagnosticContextMock.Object);
+            _personsGetterService = new PersonsGetterService(_personsRepository, loggerMock.Object, diagnosticContextMock.Object);
+
             _personsAdderService = new PersonsAdderService(_personsRepository, loggerMock.Object, diagnosticContextMock.Object);
+
             _personsDeleterService = new PersonsDeleterService(_personsRepository, loggerMock.Object, diagnosticContextMock.Object);
+
             _personsSorterService = new PersonsSorterService(_personsRepository, loggerMock.Object, diagnosticContextMock.Object);
+
             _personsUpdaterService = new PersonsUpdaterService(_personsRepository, loggerMock.Object, diagnosticContextMock.Object);
 
             _testOutputHelper = testOutputHelper;

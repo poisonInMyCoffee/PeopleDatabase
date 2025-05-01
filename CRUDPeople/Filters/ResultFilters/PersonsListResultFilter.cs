@@ -2,11 +2,11 @@
 
 namespace CRUDPeople.Filters.ResultFilters
 {
-    public class PersonListResultFilter : IAsyncResultFilter
+    public class PersonsListResultFilter : IAsyncResultFilter
     {
-        private readonly ILogger<PersonListResultFilter> _logger;
+        private readonly ILogger<PersonsListResultFilter> _logger;
 
-        public PersonListResultFilter(ILogger<PersonListResultFilter> logger)
+        public PersonsListResultFilter(ILogger<PersonsListResultFilter> logger)
         {
             _logger = logger;
         }
@@ -15,7 +15,7 @@ namespace CRUDPeople.Filters.ResultFilters
         {
 
             //TO Do: Before Logic
-            _logger.LogInformation("{FilterName}.{MethodName} - before", nameof(PersonListResultFilter), nameof(OnResultExecutionAsync));
+            _logger.LogInformation("{FilterName}.{MethodName} - before", nameof(PersonsListResultFilter), nameof(OnResultExecutionAsync));
 
             context.HttpContext.Response.Headers["Last-Modified"] = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
 
@@ -24,7 +24,7 @@ namespace CRUDPeople.Filters.ResultFilters
 
             //To Do : After Logic
 
-            _logger.LogInformation("{FilterName}.{MethodName} - after", nameof(PersonListResultFilter), nameof(OnResultExecutionAsync));
+            _logger.LogInformation("{FilterName}.{MethodName} - after", nameof(PersonsListResultFilter), nameof(OnResultExecutionAsync));
 
         }
     }

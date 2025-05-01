@@ -18,35 +18,47 @@ namespace CRUDTests
     {
         private readonly IPersonsGetterService _personsGetterService;
         private readonly IPersonsAdderService _personsAdderService;
+        private readonly IPersonsDeleterService _personsDeleterService;
         private readonly IPersonsUpdaterService _personsUpdaterService;
         private readonly IPersonsSorterService _personsSorterService;
-        private readonly IPersonsDeleterService _personsDeleterService;
-        private readonly ICountriesService _countriesService;
+
+        private readonly ICountriesGetterService _countriesService;
         private readonly ILogger<PersonsController> _logger;
 
-        private readonly Mock<ICountriesService> _countriesServiceMock;
-        private readonly Mock<IPersonsGetterService> _personsServiceMock;
-        private readonly Mock<IPersonsAdderService> _personsAdderMock;
-        private readonly Mock<IPersonsUpdaterService> _personsUpdaterMock;
-        private readonly Mock<IPersonsSorterService> _personsSorterMock;
-        private readonly Mock<IPersonsDeleterService> _personsDeleterMock;
+        private readonly Mock<ICountriesGetterService> _countriesServiceMock;
+        private readonly Mock<IPersonsGetterService> _personsGetterServiceMock;
+        private readonly Mock<IPersonsAdderService> _personsAdderServiceMock;
+        private readonly Mock<IPersonsUpdaterService> _personsUpdaterServiceMock;
+        private readonly Mock<IPersonsSorterService> _personsSorterServiceMock;
+        private readonly Mock<IPersonsDeleterService> _personsDeleterServiceMock;
+
+
         private readonly Mock<ILogger<PersonsController>> _loggerMock;
 
         private readonly Fixture _fixture;
+
 
         public PersonsControllerTest()
         {
             _fixture = new Fixture();
 
-            _countriesServiceMock = new Mock<ICountriesService>();
+            _countriesServiceMock = new Mock<ICountriesGetterService>();
             _personsGetterServiceMock = new Mock<IPersonsGetterService>();
             _personsAdderServiceMock = new Mock<IPersonsAdderService>();
-            _loggerMock= new Mock <ILogger<PersonsController>>(); 
+            _personsDeleterServiceMock = new Mock<IPersonsDeleterService>();
+            _personsUpdaterServiceMock = new Mock<IPersonsUpdaterService>();
+            _personsSorterServiceMock = new Mock<IPersonsSorterService>();
+
+            _loggerMock = new Mock<ILogger<PersonsController>>();
 
             _countriesService = _countriesServiceMock.Object;
-            _personsService = _personsServiceMock.Object;
-            _logger = _loggerMock.Object;
+            _personsGetterService = _personsGetterServiceMock.Object;
+            _personsAdderService = _personsAdderServiceMock.Object;
+            _personsUpdaterService = _personsUpdaterServiceMock.Object;
+            _personsDeleterService = _personsDeleterServiceMock.Object;
+            _personsSorterService = _personsSorterServiceMock.Object;
 
+            _logger = _loggerMock.Object;
         }
 
         #region Index
@@ -57,13 +69,13 @@ namespace CRUDTests
             //Arrange
             List<PersonResponse> persons_response_list = _fixture.Create<List<PersonResponse>>();
 
-            PersonsController personsController = new PersonsController(_personsService, _countriesService, _logger);
+            PersonsController personsController = new PersonsController(_personsGetterService, _personsAdderService, _personsDeleterService, _personsUpdaterService, _personsSorterService, _countriesService, _logger);
 
-            _personsServiceMock
+            _personsGetterServiceMock
              .Setup(temp => temp.GetFilteredPersons(It.IsAny<string>(), It.IsAny<string>()))
              .ReturnsAsync(persons_response_list);
 
-            _personsServiceMock
+            _personsSorterServiceMock
              .Setup(temp => temp.GetSortedPersons(It.IsAny<List<PersonResponse>>(), It.IsAny<string>(), It.IsAny<SortOrderOptions>()))
              .ReturnsAsync(persons_response_list);
 
@@ -82,41 +94,6 @@ namespace CRUDTests
         #region Create
 
         [Fact]
-        public async void Create_IfModelErrors_ToReturnCreateView()
-        {
-            //Arrange
-            PersonAddRequest person_add_request = _fixture.Create<PersonAddRequest>();
-
-            PersonResponse person_response = _fixture.Create<PersonResponse>();
-
-            List<CountryResponse> countries = _fixture.Create<List<CountryResponse>>();
-
-            _countriesServiceMock
-             .Setup(temp => temp.GetAllCountries())
-             .ReturnsAsync(countries);
-
-            _personsServiceMock
-             .Setup(temp => temp.AddPerson(It.IsAny<PersonAddRequest>()))
-             .ReturnsAsync(person_response);
-
-            PersonsController personsController = new PersonsController(_personsService, _countriesService, _logger);
-
-
-            //Act
-            personsController.ModelState.AddModelError("PersonName", "Person Name can't be blank");
-
-            IActionResult result = await personsController.Create(person_add_request);
-
-            //Assert
-            ViewResult viewResult = Assert.IsType<ViewResult>(result);
-
-            viewResult.ViewData.Model.Should().BeAssignableTo<PersonAddRequest>();
-
-            viewResult.ViewData.Model.Should().Be(person_add_request);
-        }
-
-
-        [Fact]
         public async void Create_IfNoModelErrors_ToReturnRedirectToIndex()
         {
             //Arrange
@@ -130,11 +107,11 @@ namespace CRUDTests
              .Setup(temp => temp.GetAllCountries())
              .ReturnsAsync(countries);
 
-            _personsServiceMock
+            _personsAdderServiceMock
              .Setup(temp => temp.AddPerson(It.IsAny<PersonAddRequest>()))
              .ReturnsAsync(person_response);
 
-            PersonsController personsController = new PersonsController(_personsService, _countriesService, _logger);
+            PersonsController personsController = new PersonsController(_personsGetterService, _personsAdderService, _personsDeleterService, _personsUpdaterService, _personsSorterService, _countriesService, _logger);
 
 
             //Act

@@ -33,8 +33,15 @@ namespace CRUDExample
             services.AddScoped<ICountriesRepository, CountriesRepository>();
             services.AddScoped<IPersonsRepository, PersonsRepository>();
 
-            services.AddScoped<ICountriesService, CountriesService>();
-            services.AddScoped<IPersonsService, PersonsGetterService>();
+            services.AddScoped<ICountriesGetterService, CountriesGetterService>();
+            //These two fields are to be used when open/close principle is implemented and the class personsGetterServiceWithFewExcelFields is used
+            //services.AddScoped<PersonsGetterService, PersonsGetterService>();
+            //services.AddScoped<IPersonsGetterService, personsGetterServiceWithFewExcelFields>
+            services.AddScoped<IPersonsGetterService, PersonsGetterService>();
+            services.AddScoped<IPersonsDeleterService, PersonsDeleterService>();
+            services.AddScoped<IPersonsAdderService, PersonsAdderService>();
+            services.AddScoped<IPersonsSorterService, PersonsSorterService>();
+            services.AddScoped<IPersonsUpdaterService, PersonsUpdaterService>();
 
             services.AddDbContext<ApplicationDbContext>(options =>
             {
