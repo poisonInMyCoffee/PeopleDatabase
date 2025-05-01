@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace Services
 {
+
+    //THIS IS TO EXERCISE OPEN/CLOSED PRINCIPLE, SO THAT IF WE NEED TO MAKE CHANGES IN EXCEL FILE DOWNLOAD, WE DON'T EDIT THE ORIGINAL ONE, INSTEAD WE MAKE
+    //ANOTHER ONE, AND THEN MAKE CHANGES IN CONFIGURESERVICESEXTENSION
     public class personsGetterServiceWithFewExcelFileFields : IPersonsGetterService
     {
         private readonly PersonsGetterService _personsGetterService;
