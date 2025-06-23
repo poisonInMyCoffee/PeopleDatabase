@@ -31,7 +31,7 @@ namespace Entities
         public override string ToString()
         {
             return $"Person ID:{PersonID},Person Name:{PersonName},Email:{Email},Date Of Birth:{DateOfBirth?.ToString("MM/dd/yyyy")}," +
-                $"Gender:{Gender},Country ID:{CountryID},Country:{Country?  .CountryName},Address:{Address},Receive NEws Leters:{ReceiveNewsLetters}";
+                $"Gender:{Gender},Country ID:{CountryID},Country:{Country?.CountryName},Address:{Address},Receive News Leters:{ReceiveNewsLetters}";
         }
     }
 }
