@@ -88,6 +88,3 @@ Caching (Memory, Redis)
 If you're reviewing this project as part of my portfolio or considering it for collaboration/reference, feel free to reach out via GitHub or LinkedIn.
 
 It reflects my current understanding and real-world approach to building ASP.NET Core applications.
-
-Let me know if you want to generate a CONTRIBUTING.md, add license details, or break this down into multiple project modules for even more clarity.
-
